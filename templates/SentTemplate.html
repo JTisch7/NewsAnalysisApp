@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-core.min.js" type="text/javascript"></script>
+    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-treemap.min.js"></script>
+
+    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-stock.min.js" type="text/javascript"></script>
+    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-data-adapter.min.js"></script>
+
+    <title>News Sentiment Analysis</title>
+    <style type='text/css'>
+        .bg { 
+        background-color: #474e5d; /* Dark Blue */
+        color: #ffffff;
+        }
+        .bg-2 { 
+        background-color: #5c6675; /* Black Gray */
+        color: #fff;
+        }
+        body, .bg-foot { 
+        background-color: #2f2f2f; /* Black Gray */
+        color: #fff;
+        }
+        #cont {
+        width: 95%;
+        height: 650px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        }
+        .contSecondChart {
+        width: 95%;
+        height: 630px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        display: none;
+        }
+        .contSecondChartShow {
+        width: 95%;
+        height: 630px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        }
+        #contChart {
+        width: 85%;
+        height: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        }
+        #loading, #loading22 {
+        border: 16px solid #f3f3f3;
+        border-radius: 60%;
+        border-top: 16px solid #474e5d;
+        border-bottom: 16px solid #474e5d;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 40px;
+        width: 120px;
+        height: 120px;
+        display: none;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+        }
+        #loadingDesc, #loadingDesc22 {
+        display: none;
+        }
+        #aboveBut {
+        display: none;    
+        }
+
+        @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        text-align: center;
+        }
+        .navbar {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        font-size: 12px;
+        letter-spacing: 5px;
+        color: white;
+        }
+        .navbar-nav  li a:hover {
+            color: #1abc9c !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-default" style='background-color: #474e5d'>
+        <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+            </button>
+        </div>
+        <div class="bg" style="float: left; margin: 10px;"><h1>Financial News Analysis</h1></div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right" >
+            <li><a style="color:#ffffff;" href="#overView">OVERVIEW</a></li>
+            <li><a style="color:#ffffff;" href="#brk">IDIVIDUAL</a></li>
+            <li><a style="color:#ffffff;" href="#about">ABOUT</a></li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+    <br>
+    <div class="container-fluid bg text-center">
+        <br>
+        <div class="container-fluid bg-2 text-center">
+            <br>
+            <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; font-size: medium;">This application uses
+                deep learning to perform sentiment analysis on financial news articles.  It can be used to gain a general understanding 
+                of the sentiment of a group of stocks (e.g., a portfolio of stocks) regarding current news and events.  It can also be used to 
+                take a closer look at individual stocks and dive deeper into why and how they responded to current news and events.</p>
+        </div><br><br>
+
+        <!-- First Container -->
+        <div>
+            <form method="post">
+                <div class = "form-group">
+                    <div>
+                        <div class='nonload' style="padding-left: 20%; padding-right: 20%;">
+                            <label for="company">Companies (Separated with commas) :</label>
+                            <input id="stockNames" class="form-control" type="text" name="company" placeholder="Apple, Google, Tesla, Amazon, Nike, Ford, Netflix, AT&T" style="color:#555555; margin-bottom: 10px;">
+                            <label for="tickers">Ticker Symbols (Separated with commas in same order as above) :</label>
+                            <input id="tickers" class="form-control" type="text" name="tickers" placeholder="AAPL, GOOG, TSLA, AMZN, NKE, F, NFLX, T" style="color:#555555; margin-bottom: 10px;">
+                            
+                                
+                            <label for="checkbox">Generate indivual charts</label>
+                            <div style="padding-left: 45%; padding-right: 45%;">
+                            <input id='indData' class="form-control" type="checkbox" name="indData" value='moreData' style="color:#555555; margin-bottom: 10px;">       
+                            </div>
+                            <div class='days'><label for="timePeriod">Time Period (Days 1-8) :</label></div>
+                            <div class='days' style="padding-left: 35%; padding-right: 35%;">
+                            <input class="form-control" type="number" name="timePeriod" placeholder="4" style="color:#555555; margin-bottom: 10px;">             
+                            </div>
+                              
+                        </div>
+                        <div id = loadingDesc>
+                            <br>
+                            <h4>Extracting articles published up until to this moment<br>&#8681;    &#8681;</h4>
+                            <h4>Preparing deep learning model<br>&#8681;    &#8681;</h4>
+                            <h4>Processing data<br>&#8681;    &#8681;</h4>
+                            <h4>Implementing model<br>&#8681;    &#8681;</h4>
+                            <h4>Building data visualizations<br>&#8681;    &#8681;</h4>
+                            <h4>Building individual stock charts<br></h4>
+                        </div>
+                        <div id = loading></div>
+                        <div class = "nonload" style="margin-top: 30px;">
+                        <button id="cont2" type="submit" class="btn btn-primary btn-lg" name="stocks" value="val1" onclick="loading();">Submit</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id = "loading2">
+            <div class = "nonload">
+                <div id = 'overView'>
+                    <div class="container-fluid bg-2 text-center">
+                    <h3>Overview Chart</h3>
+                    <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; padding-top: 5px; padding-bottom: 5px; font-size: medium;">
+                        Clicking on a box zooms in a level while clicking on the upper strip of the overall chart zooms out a level.  The color of
+                        a box represents the direction of the sentiment (Positive/Negative) and the size of the box represents the magnitude of the sentiment.</p>
+                    </div><br>
+                    
+                </div>
+                <br>
+                <div id= 'cont'></div>
+            </div>
+        </div>
+        <br><br>
+        <div class='nonload' id = 'brk'>
+            <div class="container-fluid bg-2 text-center" id="aboveBut">
+            <h3>Individual Charts</h3>
+            <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; padding-top: 5px; padding-bottom: 5px; font-size: medium;">
+                Switch charts by clicking the buttons below.  Hover over the boxes to show article titles (bottom chart).  Top = OHLC, Middle = Avg. Sentiment, Bottom = Article titles.</p>
+
+            </div><br>
+            
+        </div>
+        <br>
+    </div>
+    
+    <!-- Footer -->
+    <div class="container-fluid bg-2 text-center" id="about">
+        <h2>ABOUT</h2>
+        <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; font-size: medium;">This application uses
+            deep learning to perform sentiment analysis on financial news articles.  It uses a BERT model 
+            (Bidirectional Encoder Representations from Transformers) fine-tuned on financial text
+            for use in the financial domain.  First, it extracts current news data for the specified companies and time window.
+            Next, it processess the text data and feeds it into the BERT model to create sentiment scores. 
+            Optionally, it extracts and combines stock data with the corresponding news and sentiment data
+            to create an average sentiment score for each time window. Finally, it uses Anychart, a Javascript charting libary, 
+            to present the data in a visually appealing and optimal way.</p>
+        <br>
+    </div>
+
+    <!-- Footer -->
+    <footer class="container-fluid bg-foot text-center" style="padding-top: 30px; padding-bottom: 30px;">
+        <p style="word-wrap: break-word; font-size: medium;">Check out the source code and more at &nbsp;<a href="https://github.com/JTisch7/NewsAnalysisApp">www.github.com/JTisch7/NewsAnalysisApp</a></p> 
+    </footer>
+    
+    <script>
+        
+        function loading(){
+            $("#loading").show();
+            $("#loadingDesc").show();
+            $(".nonload").hide();       
+        };
+     
+        function loading2(){
+            $("#loading22").show();
+            $("#loadingDesc22").show();
+            $(".nonload22").hide();       
+        };
+
+        $("#indData").click(function() {
+            if($(this).is(":checked")) {
+                $(".days").hide();
+            } else {
+                $(".days").show();
+            }
+        });
+
+
+        function myFunction() {
+            let k = 0;
+            while (k < company.length){
+                var contDisp = document.getElementById(company[k]);
+                contDisp.style.display = 'none';
+                slicedID = this.id.slice(0,-3);
+                if (slicedID == company[k]){
+                    contDisp.style.display = 'block';
+                }
+                k++;
+            }
+
+        };
+
+        var company = JSON.parse('{{ company | tojson | safe}}'); 
+        var stocks = JSON.parse('{{ stocks | tojson | safe}}'); 
+        var ev = JSON.parse('{{ events | tojson | safe}}');
+        var testv = JSON.parse('{{ testv | tojson | safe}}'); 
+        function trying() {
+            if (testv > 0){
+                //create buttons for charts
+                let j = 0
+                while (j < company.length){
+                    document.getElementById('aboveBut').style.display = 'block';
+                    var but = document.createElement('button');
+                    but.className = "btn btn-primary btn-lg";
+                    let combName = company[j].concat('but');
+                    but.id = combName;
+                    but.name = company[j];
+                    but.style.margin = '15px';
+                    but.onclick = myFunction;
+                    //but.onclick = stockButFunc();
+                    but.innerHTML=company[j];
+                    document.getElementById('brk').appendChild(but);
+
+                    j++;
+                }
+
+                
+                //create charts
+                let i = 0
+                while (i < company.length){
+                    var div = document.createElement('div');
+                    div.className = 'contSecondChart';
+                    div.id = company[i];
+                    //div.innerHTML=company[i]
+                    document.getElementById('brk').appendChild(div);
+                    indivChart(stocks[i], ev[i], company[i], company[i]);
+                    //myFunction(company);
+                    if (i == 0){
+                        div.style.display = 'block';
+                    }
+                    i++;
+            
+                }
+            }
+        };
+        trying();
+
+        anychart.onDocumentReady(function () {
+            // create data
+            var data = JSON.parse('{{ data | tojson | safe}}');  
+
+            // create a chart and set the data
+            chart = anychart.treeMap(data, "as-tree");
+
+            // create and configure a color scale.
+            var customColorScale = anychart.scales.linearColor();
+            customColorScale.colors(["#00ccff", "#ffcc00"]);
+
+            // set the color scale as the color scale of the chart
+            chart.colorScale(customColorScale);
+
+            // add a color range
+            chart.colorRange().enabled(true);
+            chart.colorRange().length("100%");
+
+
+            chart.hintDepth(1)
+            // hintOpacity setting
+            chart.hintOpacity(0.8)
+            // disables selection opportunity
+            chart.selectionMode('none');
+
+            // set the container id
+            chart.container("cont");
+
+            // initiate drawing the chart
+            chart.draw();
+        });
+
+
+        
+        function indivChart(stocks, ev, container, name){
+        
+            anychart.onDocumentReady(function () {
+                //var stocks = JSON.parse('{{ stocks | tojson | safe}}'); 
+                // set the data
+                table = anychart.data.table('date');
+                table.addData(stocks);
+
+                // map the data
+                mapping = table.mapAs({'open':"opn",'high': "high", 'low':"low", 'close':"close", 'volume':"volume"});
+                chart = anychart.stock();
+                
+                //OHLC bar chart
+                var series = chart.plot(0).ohlc(mapping);
+                //series.name("{{ Ticker }} stock prices");
+                series.name(name);
+
+                //Event markers
+                //var ev = JSON.parse('{{ events | tojson | safe}}');
+                var eventMarkers = chart.plot(4).eventMarkers();
+                eventMarkers.data(ev);
+                //eventMarkers.name(name);
+
+                eventMarkers.normal().fill("#d1ead9");
+                eventMarkers.normal().type("rect")
+                eventMarkers.normal().width(15)
+                eventMarkers.normal().height(12)
+                eventMarkers.hovered().fill("white");
+                eventMarkers.selected().fill("white");
+
+                eventMarkers.normal().stroke("#009933", 2);
+                eventMarkers.hovered().stroke("#009933", 2);
+                eventMarkers.selected().stroke("#004d1a", 2);
+
+                eventMarkers.normal().fontColor("#009933");
+                eventMarkers.hovered().fontColor("#009933");
+                eventMarkers.selected().fontColor("#004d1a");
+                eventMarkers.normal().fontWeight(600);
+                            
+                //PosNeg column chart
+                mapping4 = table.mapAs({x: 'date', 'value': 'pos'});
+                mapping5 = table.mapAs({x: 'date', 'value': 'neg'});
+                var col = chart.plot(3);
+                col.yScale().stackMode('value');
+                ser1 = col.column(mapping4);
+                ser2 = col.column(mapping5);
+                ser1.name("Avg Positive Sentiment").color('Blue');
+                ser2.name("Avg Negative Sentiment").color('Red');
+                
+                // set the container id
+                //chart.container('contChart');
+                chart.container(container);
+
+                // draw the chart
+                chart.draw();
+
+            });
+
+        };
+        //indivChart();
+    </script>
+</body>
+</html>
