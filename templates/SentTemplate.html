@@ -138,9 +138,9 @@
         <div class="container-fluid bg-2 text-center">
             <br>
             <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; font-size: medium;">This application uses
-                deep learning to perform sentiment analysis on financial news articles.  It can be used to gain a general understanding 
-                of the sentiment of a group of stocks (e.g., a portfolio of stocks) regarding current news and events.  It can also be used to 
-                take a closer look at individual stocks and dive deeper into why and how they responded to current news and events.</p>
+                deep learning to perform sentiment analysis on financial news articles.  It can be used to gain an overall understanding 
+                of the sentiments of a group of stocks (e.g., a portfolio of stocks) based on current news and events. 
+                It can also be used to take a closer look at individual stocks and dive deeper into their reactions to news and events.</p>
         </div><br><br>
 
         <!-- First Container -->
@@ -167,12 +167,12 @@
                         </div>
                         <div id = loadingDesc>
                             <br>
-                            <h4>Extracting articles published up until to this moment<br>&#8681;    &#8681;</h4>
+                            <h4>Extracting hundreds (or thousands) of articles published up until to this moment<br>&#8681;    &#8681;</h4>
                             <h4>Preparing deep learning model<br>&#8681;    &#8681;</h4>
                             <h4>Processing data<br>&#8681;    &#8681;</h4>
                             <h4>Implementing model<br>&#8681;    &#8681;</h4>
                             <h4>Building data visualizations<br>&#8681;    &#8681;</h4>
-                            <h4>Building individual stock charts<br></h4>
+                            <h4>Creating individual stock charts<br></h4>
                         </div>
                         <div id = loading></div>
                         <div class = "nonload" style="margin-top: 30px;">
@@ -189,8 +189,8 @@
                     <div class="container-fluid bg-2 text-center">
                     <h3>Overview Chart</h3>
                     <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; padding-top: 5px; padding-bottom: 5px; font-size: medium;">
-                        Clicking on a box zooms in a level while clicking on the upper strip of the overall chart zooms out a level.  The color of
-                        a box represents the direction of the sentiment (Positive/Negative) and the size of the box represents the magnitude of the sentiment.</p>
+                        Click on a box to zoom in a level and click on the upper strip of the overall chart to zoom out a level.  The color of
+                        a box represents the direction of the sentiment, yellow for positive, blue for negative, and the size of the box represents the magnitude of the sentiment.</p>
                     </div><br>
                     
                 </div>
@@ -203,7 +203,7 @@
             <div class="container-fluid bg-2 text-center" id="aboveBut">
             <h3>Individual Charts</h3>
             <p style="word-wrap: break-word; padding-left: 10%; padding-right: 10%; padding-top: 5px; padding-bottom: 5px; font-size: medium;">
-                Switch charts by clicking the buttons below.  Hover over the boxes to show article titles (bottom chart).  Top = OHLC, Middle = Avg. Sentiment, Bottom = Article titles.</p>
+                Switch charts by clicking the buttons below.  Hover over the boxes on the bottom chart to show article titles.  Top = OHLC, Middle = Avg. Sentiments, Bottom = Article titles.</p>
 
             </div><br>
             
@@ -219,7 +219,7 @@
             (Bidirectional Encoder Representations from Transformers) fine-tuned on financial text
             for use in the financial domain.  First, it extracts current news data for the specified companies and time window.
             Next, it processess the text data and feeds it into the BERT model to create sentiment scores. 
-            Optionally, it extracts and combines stock data with the corresponding news and sentiment data
+            Also, optionally, it extracts and combines stock data with the corresponding news and sentiment data
             to create an average sentiment score for each time window. Finally, it uses Anychart, a Javascript charting libary, 
             to present the data in a visually appealing and optimal way.</p>
         <br>
