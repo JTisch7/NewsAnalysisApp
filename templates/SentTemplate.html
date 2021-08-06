@@ -145,23 +145,28 @@
 
         <!-- First Container -->
         <div>
-            <form method="post">
+            <form method="post" name='myform' onsubmit="return validateForm()">
                 <div class = "form-group">
                     <div>
                         <div class='nonload' style="padding-left: 20%; padding-right: 20%;">
                             <label for="company">Companies (Separated with commas) :</label>
-                            <input id="stockNames" class="form-control" type="text" name="company" placeholder="Apple, Google, Tesla, Amazon, Nike, Ford, Netflix, AT&T" style="color:#555555; margin-bottom: 10px;">
+                            <input id="stockNames" class="form-control" type="text" name="company" 
+                            placeholder="Apple, Google, Tesla, Amazon, Nike, Ford, Netflix, AT&T" 
+                            style="color:#555555; margin-bottom: 10px;">
                             <label for="tickers">Ticker Symbols (Separated with commas in same order as above) :</label>
-                            <input id="tickers" class="form-control" type="text" name="tickers" placeholder="AAPL, GOOG, TSLA, AMZN, NKE, F, NFLX, T" style="color:#555555; margin-bottom: 10px;">
+                            <input id="tickers" class="form-control" type="text" name="tickers" 
+                            placeholder="AAPL, GOOG, TSLA, AMZN, NKE, F, NFLX, T" style="color:#555555; margin-bottom: 10px;">
                             
                                 
                             <label for="checkbox">Generate indivual charts</label>
                             <div style="padding-left: 45%; padding-right: 45%;">
-                            <input id='indData' class="form-control" type="checkbox" name="indData" value='moreData' style="color:#555555; margin-bottom: 10px;">       
+                            <input id='indData' class="form-control" type="checkbox" name="indData" value='moreData' 
+                            style="color:#555555; margin-bottom: 10px;">       
                             </div>
                             <div class='days'><label for="timePeriod">Time Period (Days 1-8) :</label></div>
                             <div class='days' style="padding-left: 35%; padding-right: 35%;">
-                            <input class="form-control" type="number" name="timePeriod" placeholder="4" style="color:#555555; margin-bottom: 10px;">             
+                            <input class="form-control" type="number" name="timePeriod" placeholder="4" 
+                            style="color:#555555; margin-bottom: 10px;">             
                             </div>
                               
                         </div>
@@ -176,7 +181,7 @@
                         </div>
                         <div id = loading></div>
                         <div class = "nonload" style="margin-top: 30px;">
-                        <button id="cont2" type="submit" class="btn btn-primary btn-lg" name="stocks" value="val1" onclick="loading();">Submit</button>
+                        <button id="cont2" type="submit" class="btn btn-primary btn-lg" name="stocks" value="val1" >Submit</button>
                         </div>
                         <br>
                     </div>
@@ -232,16 +237,25 @@
     
     <script>
         
-        function loading(){
-            $("#loading").show();
-            $("#loadingDesc").show();
-            $(".nonload").hide();       
-        };
-     
-        function loading2(){
-            $("#loading22").show();
-            $("#loadingDesc22").show();
-            $(".nonload22").hide();       
+        function validateForm(){
+            let x = document.forms["myform"]["company"].value;
+            let y = document.forms["myform"]["tickers"].value;
+            let z = document.querySelector('#indData').checked;
+            let a = document.forms["myform"]["timePeriod"].value;
+            xlen = x.split(",").length
+            ylen = y.split(",").length
+
+            if ((xlen == ylen && x != "" && y != "" && z) || (xlen == ylen && x != "" && y != "" && (a > 0 && a < 9))) {
+
+                $("#loading").show();
+                $("#loadingDesc").show();
+                $(".nonload").hide();    
+                alert('THANK YOU! This will take a minute or two. Please do not refresh.');
+            }
+            else {
+                alert('Please follow the directions above each input field');
+                return false;
+            }
         };
 
         $("#indData").click(function() {
@@ -251,7 +265,6 @@
                 $(".days").show();
             }
         });
-
 
         function myFunction() {
             let k = 0;
@@ -264,14 +277,13 @@
                 }
                 k++;
             }
-
         };
 
         var company = JSON.parse('{{ company | tojson | safe}}'); 
         var stocks = JSON.parse('{{ stocks | tojson | safe}}'); 
         var ev = JSON.parse('{{ events | tojson | safe}}');
         var testv = JSON.parse('{{ testv | tojson | safe}}'); 
-        function trying() {
+        function createCharts() {
             if (testv > 0){
                 //create buttons for charts
                 let j = 0
@@ -291,7 +303,6 @@
                     j++;
                 }
 
-                
                 //create charts
                 let i = 0
                 while (i < company.length){
@@ -306,58 +317,37 @@
                         div.style.display = 'block';
                     }
                     i++;
-            
                 }
             }
         };
-        trying();
+
+        createCharts();
 
         anychart.onDocumentReady(function () {
-            // create data
+
             var data = JSON.parse('{{ data | tojson | safe}}');  
-
-            // create a chart and set the data
             chart = anychart.treeMap(data, "as-tree");
-
-            // create and configure a color scale.
             var customColorScale = anychart.scales.linearColor();
             customColorScale.colors(["#00ccff", "#ffcc00"]);
-
-            // set the color scale as the color scale of the chart
             chart.colorScale(customColorScale);
-
-            // add a color range
             chart.colorRange().enabled(true);
             chart.colorRange().length("100%");
-
-
             chart.hintDepth(1)
-            // hintOpacity setting
             chart.hintOpacity(0.8)
-            // disables selection opportunity
             chart.selectionMode('none');
-
-            // set the container id
             chart.container("cont");
-
-            // initiate drawing the chart
             chart.draw();
         });
 
-
-        
         function indivChart(stocks, ev, container, name){
         
             anychart.onDocumentReady(function () {
                 //var stocks = JSON.parse('{{ stocks | tojson | safe}}'); 
-                // set the data
                 table = anychart.data.table('date');
                 table.addData(stocks);
-
                 // map the data
                 mapping = table.mapAs({'open':"opn",'high': "high", 'low':"low", 'close':"close", 'volume':"volume"});
                 chart = anychart.stock();
-                
                 //OHLC bar chart
                 var series = chart.plot(0).ohlc(mapping);
                 //series.name("{{ Ticker }} stock prices");
@@ -368,7 +358,6 @@
                 var eventMarkers = chart.plot(4).eventMarkers();
                 eventMarkers.data(ev);
                 //eventMarkers.name(name);
-
                 eventMarkers.normal().fill("#d1ead9");
                 eventMarkers.normal().type("rect")
                 eventMarkers.normal().width(15)
@@ -394,18 +383,15 @@
                 ser2 = col.column(mapping5);
                 ser1.name("Avg Positive Sentiment").color('Blue');
                 ser2.name("Avg Negative Sentiment").color('Red');
-                
+
                 // set the container id
                 //chart.container('contChart');
                 chart.container(container);
-
                 // draw the chart
                 chart.draw();
-
             });
-
         };
-        //indivChart();
+
     </script>
 </body>
 </html>
