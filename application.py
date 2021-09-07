@@ -37,7 +37,6 @@ import json
 
 application = flask.Flask(__name__)
 #application.config["DEBUG"] = True
-#app.config['SECRET_KEY'] = '123453452435243545455678'
 
 chartOne = pickle.load(open('defaultChartData/firstChartData.pkl','rb'))
 chartTwo = pickle.load(open('defaultChartData/secondChartStocksData.pkl','rb'))
@@ -50,7 +49,6 @@ company = ''
 stocksList = ''
 eventsList = ''
 ticksStrip = ''
-
 
 
 def sentLoop(allLists):
