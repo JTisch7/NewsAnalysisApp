@@ -6,7 +6,47 @@ This application uses deep learning to perform sentiment analysis on financial n
 
 # Deployment and Technologies
 •	Deployed using various Amazon Web Services  
-•	Extracts current news and stock data, uses a deep learning model to perform sentiment analysis on it, and builds insightful visualizations summarizing the data and sentiment scores  
 •	Used Amazon SageMaker to create, host and deploy an endpoint for a pre-built fine-tuned BERT model  
 •	Utilized serverless technology to invoke the model endpoint by creating a REST API and Lambda function using Amazon API Gateway and Amazon Lambda  
-•	Built a web application around the model using Amazon Elastic Beanstalk, Python, Flask, JavaScript, and across multiple APIs  
+•	Built the web application around the model using Amazon Elastic Beanstalk, Python, Flask, JavaScript, and across multiple APIs  
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Files
+
+#### CreatingTheModel -  
+- Contains data used to fine-tune the BERT model (Financial Phrasebank)
+- Contains scripts showing how to freeze and unfreeze layers for fine-tuning, how to save the fine-tuned model, and how to load and use saved model for inference
+- Contains a few different model files with slightly different archictectures
+- Creating_A_FinBert_Saveable_Deeper.py contains the script to fine-tune final model  
+
+#### defaultChartData -  
+- Contains default chart data used to populate charts for landing page   
+
+#### sageMakerSripts -  
+- Contains files used within Amazon SageMaker
+- Contains notebook with scripts showing how to load pre-trained TensorFlow model, create SageMaker endpoint for the model, and then invoke the endpoint to get predictions
+- Contains an inference.py file used to process and tokenize the text data
+- Contains a requirements.txt file for the inference.py file  
+
+#### templates -  
+- Contains main HTML template
+
+#### application.py -  
+- Contains main application file
+
+#### combNewsPull.py -  
+- Contains scripts used to pull and process data for both charts
+
+#### inference.py -  
+- Contains tokenizer and processing script for SageMaker
+
+#### lambdaFunction.py -  
+- Contains Amazon Lambda function used to invoke the Sagemaker endpoint
+
+#### secondChartFuncs.py -  
+- Contains scripts used to pull and process data for the individual charts only
+
+#### requirements.txt -  
+- requirements.txt file for application and provided to Amazon Elastic Beanstalk
+
