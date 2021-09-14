@@ -25,7 +25,7 @@ This application uses deep learning to perform sentiment analysis on financial n
 
 #### sageMakerSripts -  
 - Contains files used within Amazon SageMaker
-- Contains notebook with scripts showing how to load pre-trained TensorFlow model, create SageMaker endpoint for the model, and then invoke the endpoint to get predictions
+- Contains notebook with scripts showing how to load pre-trained TensorFlow model, create SageMaker endpoint for the model, and invoke the model endpoint to get predictions
 - Contains an inference.py file used to process and tokenize the text data
 - Contains a requirements.txt file for the inference.py file  
 
@@ -33,20 +33,20 @@ This application uses deep learning to perform sentiment analysis on financial n
 - Contains main HTML template
 
 #### application.py -  
-- Contains main application file
+- Main application file
 
 #### combNewsPull.py -  
-- Contains scripts used to pull and process data for both charts
+- Script used to pull and process data for both charts
 
 #### inference.py -  
-- Contains tokenizer and processing script for SageMaker
+- Script containing tokenizer and processing func for SageMaker
 
 #### lambdaFunction.py -  
-- Contains Amazon Lambda function used to invoke the Sagemaker endpoint
+- Amazon Lambda function used to invoke the Sagemaker endpoint
 
 #### secondChartFuncs.py -  
-- Contains scripts used to pull and process data for the individual charts only
+- Contains funcs used to pull and process data for the individual charts only
 
 #### requirements.txt -  
-- requirements.txt file for application and provided to Amazon Elastic Beanstalk
+- requirements.txt file for application and Amazon Elastic Beanstalk
 
