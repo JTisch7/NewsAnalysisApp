@@ -14,6 +14,9 @@ This application uses deep learning to perform sentiment analysis on financial n
 
 # Files
 
+#### AWS_ebextensions_platform -  
+- EB config files for NGINX
+
 #### CreatingTheModel -  
 - Contains data used to fine-tune the BERT model (Financial Phrasebank)
 - Contains scripts showing how to freeze and unfreeze layers for fine-tuning, how to save the fine-tuned model, and how to load and use saved model for inference
